@@ -1,0 +1,14 @@
+{
+  "kind": "collectionType",
+  "collectionName": "pro",
+  "info": {
+    "singularName": "product",
+    "pluralName": "pro",
+    "displayName": "Produtos"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {}
+}

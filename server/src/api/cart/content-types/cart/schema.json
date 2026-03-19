@@ -10,5 +10,17 @@
     "draftAndPublish": true
   },
   "pluginOptions": {},
-  "attributes": {}
+  "attributes": {
+    "users_permissions_user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "itens_carrinho": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::cart-iten.cart-iten",
+      "inversedBy": "carrinho"
+    }
+  }
 }

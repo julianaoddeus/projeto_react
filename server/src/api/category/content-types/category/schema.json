@@ -1,14 +1,18 @@
 {
   "kind": "collectionType",
-  "collectionName": "cate",
+  "collectionName": "categories",
   "info": {
     "singularName": "category",
-    "pluralName": "cate",
+    "pluralName": "categories",
     "displayName": "Categorias"
   },
   "options": {
     "draftAndPublish": true
   },
   "pluginOptions": {},
-  "attributes": {}
+  "attributes": {
+    "name": {
+      "type": "string"
+    }
+  }
 }

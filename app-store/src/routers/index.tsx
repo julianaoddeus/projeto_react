@@ -1,16 +1,19 @@
 import { Route, Routes } from "react-router";
-import {ProtectedRoute} from './protected-route';
+import { ProtectedRoute } from "./protected-route";
 import Layout from "../_components/Layout";
+import Home from "../pages/Home";
+import Register from "../pages/Register";
+import Login from "../pages/Login";
+import Products from "../pages/Products";
 
 export const Routers = () => {
   return (
     <Routes>
-      <Route>
-        <Route path="/" element={<Layout/>}/>
-        <Route path="/" element={<>Home</>} />        
-        <Route path="/login" element={<>Login</>} />
-        <Route path="/register" element={<></>} />
-        <Route path="/products" element={<></>} />
+      <Route element={<Layout />}>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login/>} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/products" element={<Products/>} />
         <Route path="/product/:id" element={<></>} />
 
         <Route element={<ProtectedRoute />}>

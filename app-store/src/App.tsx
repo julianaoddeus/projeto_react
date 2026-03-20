@@ -2,9 +2,10 @@ import { BrowserRouter } from "react-router";
 import { ToastContainer } from "react-toastify";
 import { Routers } from "./routers";
 
+
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter>    
       <ToastContainer />
       <Routers />
     </BrowserRouter>

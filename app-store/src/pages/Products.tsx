@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Search, Filter, X } from "lucide-react";
 
 export function Products() {
-  // useState - Estados de filtro e busca
+ 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
   const [showFilters, setShowFilters] = useState(false);
@@ -12,13 +12,13 @@ export function Products() {
     setSearchTerm(e.target.value);
   };
 
-  // Função que muda estado do componente (demonstra rubrica)
+ 
   const handleCategorySelect = (categoryId: number | null) => {
     setSelectedCategory(categoryId);
     setShowFilters(false);
   };
 
-  // Limpa todos os filtros
+
   const clearFilters = () => {
     setSearchTerm("");
     setSelectedCategory(null);

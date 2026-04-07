@@ -2,9 +2,9 @@
   "kind": "collectionType",
   "collectionName": "cart_itens",
   "info": {
-    "singularName": "cart-iten",
+    "singularName": "cart-item",
     "pluralName": "cart-itens",
-    "displayName": "Itens Carrinho"
+    "displayName": "Carrinhos"
   },
   "options": {
     "draftAndPublish": true
@@ -14,14 +14,10 @@
     "quantity": {
       "type": "integer"
     },
-    "unit_price": {
-      "type": "decimal"
-    },
-    "carrinho": {
+    "users": {
       "type": "relation",
       "relation": "oneToOne",
-      "target": "api::cart.cart",
-      "mappedBy": "itens_carrinho"
+      "target": "plugin::users-permissions.user"
     }
   }
 }

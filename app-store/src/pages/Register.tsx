@@ -1,50 +1,61 @@
-import { useState, useEffect } from 'react';
-import type { FormEvent } from 'react';
-import { Link, useNavigate } from 'react-router';
-import { Eye, EyeOff, Mail, Lock, User } from 'lucide-react';
-import { toast } from 'react-toastify';
+import { useState } from "react";
+import type { FormEvent } from "react";
+import { Link, useNavigate } from "react-router";
+import { Eye, EyeOff, Mail, Lock, User } from "lucide-react";
+import { toast } from "react-toastify";
+import { useAppDispatch } from "../store";
+import type { AuthResponse } from "../types";
+import { useMutation } from "@tanstack/react-query";
+import { setCredentials } from "../store/slices/auth_slice";
+import { api } from "../services/api";
 
 export function Register() {
-  // useState - Estados do formulário
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const dispatch = useAppDispatch();
+
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-
-
-  const isAuthenticated = false;
-  const isLoading = false;
   const navigate = useNavigate();
 
- 
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate('/', { replace: true });
-    }
-  }, [isAuthenticated, navigate]);
-
+  const registerMutation = useMutation({
+    mutationFn: async () => {
+      const response = await api.post<AuthResponse>("/auth/local/register", {
+        username,
+        email,
+        password,
+      });
+      return response.data;
+    },
+    onSuccess: (data) => {
+      dispatch(setCredentials({ user: data.user, token: data.jwt }));
+      toast.success("Cadastro realizado com sucesso!");
+      navigate("/", { replace: true });
+    },
+  });
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
     if (!username || !email || !password || !confirmPassword) {
-      toast.warn('Preencha todos os campos!');
+      toast.warn("Preencha todos os campos!");
       return;
     }
 
     if (password !== confirmPassword) {
-      toast.warn('As senhas não coincidem!');
+      toast.warn("As senhas não coincidem!");
       return;
     }
 
     if (password.length < 6) {
-      toast.warn('A senha deve ter pelo menos 6 caracteres!');
+      toast.warn("A senha deve ter pelo menos 6 caracteres!");
       return;
     }
 
-    
+    registerMutation.mutate();
   };
 
   return (
@@ -53,13 +64,18 @@ export function Register() {
         <div className="bg-gray-800 bg-opacity-40 rounded-2xl shadow-lg p-8">
           <div className="text-center mb-8">
             <h1 className="text-2xl font-bold text-gray-500">Criar conta</h1>
-            <p className="text-secondary mt-2">Preencha os dados para se cadastrar</p>
+            <p className="text-secondary mt-2">
+              Preencha os dados para se cadastrar
+            </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Campo Username */}
             <div>
-              <label htmlFor="username" className="block text-sm font-medium text-gray-500 mb-2">
+              <label
+                htmlFor="username"
+                className="block text-sm font-medium text-gray-500 mb-2"
+              >
                 Nome de usuário
               </label>
               <div className="relative">
@@ -77,7 +93,10 @@ export function Register() {
 
             {/* Campo Email */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-500 mb-2">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-500 mb-2"
+              >
                 Email
               </label>
               <div className="relative">
@@ -95,14 +114,17 @@ export function Register() {
 
             {/* Campo Senha */}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-500 mb-2">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-500 mb-2"
+              >
                 Senha
               </label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-secondary" />
                 <input
                   id="password"
-                  type={showPassword ? 'text' : 'password'}
+                  type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Mínimo 6 caracteres"
@@ -113,21 +135,28 @@ export function Register() {
                   onClick={() => setShowPassword((prev) => !prev)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary hover:text-gray-500"
                 >
-                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  {showPassword ? (
+                    <EyeOff className="w-5 h-5" />
+                  ) : (
+                    <Eye className="w-5 h-5" />
+                  )}
                 </button>
               </div>
             </div>
 
             {/* Campo Confirmar Senha */}
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-500 mb-2">
+              <label
+                htmlFor="confirmPassword"
+                className="block text-sm font-medium text-gray-500 mb-2"
+              >
                 Confirmar senha
               </label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-secondary" />
                 <input
                   id="confirmPassword"
-                  type={showPassword ? 'text' : 'password'}
+                  type={showPassword ? "text" : "password"}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="Repita a senha"
@@ -139,24 +168,27 @@ export function Register() {
             {/* Botão Submit */}
             <button
               type="submit"
-              disabled={false}
+              disabled={registerMutation.isPending}
               className="w-full py-3 bg-pink-400 text-white rounded-lg font-medium hover:bg-gray-800 disabled:opacity-30 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
             >
-              {isLoading ? (
+              {registerMutation.isPending ? (
                 <>
                   <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                   Cadastrando...
                 </>
               ) : (
-                'Cadastrar'
+                "Cadastrar"
               )}
             </button>
           </form>
 
           <div className="mt-6 text-center">
             <p className="text-secondary">
-              Já tem uma conta?{' '}
-              <Link to="/login" className="text-pink-400 font-medium hover:underline">
+              Já tem uma conta?{" "}
+              <Link
+                to="/login"
+                className="text-pink-400 font-medium hover:underline"
+              >
                 Entrar
               </Link>
             </p>

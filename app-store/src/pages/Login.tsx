@@ -1,41 +1,44 @@
-import { useState, useEffect } from 'react';
-import type {FormEvent} from 'react';
-import { Link, useNavigate, useLocation } from 'react-router';
-import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
-import { toast } from 'react-toastify';
+import { useState } from "react";
+import type { FormEvent } from "react";
+import { Link, useNavigate, useLocation } from "react-router";
+import { Eye, EyeOff, Mail, Lock } from "lucide-react";
+import { toast } from "react-toastify";
+import { useAppDispatch } from "../store";
+import { useMutation } from "@tanstack/react-query";
+import type { AuthResponse } from "../types";
+import { api } from "../services/api";
+import { setCredentials } from "../store/slices/auth_slice";
 
 export function Login() {
-
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-const isAuthenticated = false;
-const isLoading = false;
-
-
-  const navigate = useNavigate();
   const location = useLocation();
 
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
-  const from = location.state?.from?.pathname || '/';
+  const from = location.state?.from?.pathname || "/";
 
+  const loginMutation = useMutation({
+    mutationFn: async () => {
+      const response = await api.post<AuthResponse>("/auth/local", {
+        email,
+        password,
+      });
+      return response.data;
+    },
+    onSuccess: (data) => {
+      dispatch(setCredentials({ user: data.user, token: data.jwt }));
 
-  useEffect(() => {
-    if (isAuthenticated) {
+      toast.success(`Bem-vindo de volta, ${data.user.username}!`);
       navigate(from, { replace: true });
-    }
-  }, [isAuthenticated, navigate, from]);
-
-
-
-
-  useEffect(() => {
-    console.log('Estado do formulário de login:');
-    console.log('Email:', email);
-    console.log('Loading:', isLoading);
-  }, [email, isLoading]);
-
+    },
+    onError: () => {
+      toast.error("Credenciais inválidas. Tente novamente.");
+    },
+  });
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -50,16 +53,15 @@ const isLoading = false;
     setShowPassword((prev) => !prev);
   };
 
-
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
     if (!email || !password) {
-      toast.warn('Preencha todos os campos!');
+      toast.warn("Preencha todos os campos!");
       return;
     }
 
-    
+    loginMutation.mutate();
   };
 
   return (
@@ -67,14 +69,21 @@ const isLoading = false;
       <div className="w-full max-w-md">
         <div className="bg-gray-800 bg-opacity-40 rounded-2xl shadow-lg p-8">
           <div className="text-center mb-8">
-            <h1 className="text-2xl font-bold text-pink-400">Bem-vindo de volta</h1>
-            <p className="text-secondary mt-2">Entre na sua conta para continuar</p>
+            <h1 className="text-2xl font-bold text-pink-400">
+              Bem-vindo de volta
+            </h1>
+            <p className="text-secondary mt-2">
+              Entre na sua conta para continuar
+            </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Campo Email */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-500 mb-2">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-500 mb-2"
+              >
                 Email
               </label>
               <div className="relative">
@@ -92,14 +101,17 @@ const isLoading = false;
 
             {/* Campo Senha */}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-500 mb-2">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-500 mb-2"
+              >
                 Senha
               </label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-secondary" />
                 <input
                   id="password"
-                  type={showPassword ? 'text' : 'password'}
+                  type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={handlePasswordChange}
                   placeholder="********"
@@ -110,7 +122,11 @@ const isLoading = false;
                   onClick={togglePasswordVisibility}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary hover:text-gray-500"
                 >
-                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  {showPassword ? (
+                    <EyeOff className="w-5 h-5" />
+                  ) : (
+                    <Eye className="w-5 h-5" />
+                  )}
                 </button>
               </div>
             </div>
@@ -118,24 +134,27 @@ const isLoading = false;
             {/* Botão Submit */}
             <button
               type="submit"
-              disabled={isLoading}
+              disabled={loginMutation.isPending}
               className="w-full py-3 bg-primary text-white bg-pink-400 rounded-lg font-medium hover:bg-gray-800 disabled:opacity-30 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
             >
-              {isLoading ? (
+              {loginMutation.isPending ? (
                 <>
                   <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                   Entrando...
                 </>
               ) : (
-                'Entrar'
+                "Entrar"
               )}
             </button>
           </form>
 
           <div className="mt-6 text-center">
             <p className="text-secondary">
-              Não tem uma conta?{' '}
-              <Link to="/register" className="text-pink-400 font-medium hover:underline">
+              Não tem uma conta?{" "}
+              <Link
+                to="/register"
+                className="text-pink-400 font-medium hover:underline"
+              >
                 Cadastre-se
               </Link>
             </p>

@@ -1,23 +1,22 @@
-import { Link } from 'react-router';
-import { ShoppingBag, Tag, Shield } from 'lucide-react';
+import { Link } from "react-router";
+import { ShoppingBag, Tag, Shield } from "lucide-react";
 
 export function Home() {
   return (
     <div className="flex flex-col">
-      {/* Hero Section */}
-      <section className="bg-primary text-white py-20">
+      <section className="bg-gray-800 text-white py-20">
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-6 text-balance text-pink-400">
             Bem-vindo à TinyStore
           </h1>
           <p className="text-lg md:text-xl mb-8 max-w-2xl mx-auto text-pretty opacity-90">
-            Encontre os melhores produtos com os melhores preços.
-            Sua experiência de compra começa aqui.
+            Encontre os melhores produtos com os melhores preços. Sua
+            experiência de compra começa aqui.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               to="/products"
-              className="px-8 py-3 bg-pink-400 text-primary rounded-lg font-medium hover:opacity-90 transition-colors"
+              className="px-8 py-3 bg-pink-400 text-white rounded-lg font-medium hover:opacity-90 transition-colors"
             >
               Ver Produtos
             </Link>
@@ -31,7 +30,6 @@ export function Home() {
         </div>
       </section>
 
-      {/* Features Section */}
       <section className="py-16 bg-background">
         <div className="container mx-auto px-4">
           <h2 className="text-2xl md:text-3xl font-bold text-center text-gray-500 mb-12">
@@ -46,7 +44,8 @@ export function Home() {
                 Produtos de Qualidade
               </h3>
               <p className="text-secondary">
-                Selecionamos os melhores produtos para você com garantia de qualidade.
+                Selecionamos os melhores produtos para você com garantia de
+                qualidade.
               </p>
             </div>
             <div className="flex flex-col items-center text-center p-6">
@@ -62,27 +61,28 @@ export function Home() {
             </div>
             <div className="flex flex-col items-center text-center p-6">
               <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-4">
-                <Shield className="w-8 h-8 text-green-400 "  />
+                <Shield className="w-8 h-8 text-green-400 " />
               </div>
               <h3 className="text-xl font-semibold text-gray-500 mb-2">
                 Compra Segura
               </h3>
               <p className="text-secondary">
-                Suas informações estão protegidas com criptografia de ponta a ponta.
+                Suas informações estão protegidas com criptografia de ponta a
+                ponta.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
       <section className="py-16 bg-muted">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-500 mb-4">
             Pronto para começar?
           </h2>
           <p className="text-secondary mb-8 max-w-xl mx-auto">
-            Crie sua conta agora e aproveite ofertas exclusivas para novos clientes.
+            Crie sua conta agora e aproveite ofertas exclusivas para novos
+            clientes.
           </p>
           <Link
             to="/register"
@@ -93,15 +93,16 @@ export function Home() {
         </div>
       </section>
 
-      {/* Demo Section */}
       <section className="py-16 bg-background">
         <div className="container mx-auto px-4">
           <h2 className="text-2xl md:text-3xl font-bold text-center text-gray-500 mb-4">
-            Demonstração de Conceitos React
+            O que esperar?
           </h2>
           <p className="text-secondary text-center mb-8 max-w-2xl mx-auto">
-            Esta seção demonstra os conceitos de useState, useEffect, memo, useMemo e useCallback
-            para controle de estado e otimização de renderização.
+            A proposta dos cursos de React é te guiar passo a passo na
+            construções de aplicações completas. Você aprenderá a desenvolver
+            aplicações do absoluto zero utilizando ferramentas como TailwindCss,
+            Styled-Components, Vite, Firebase, Typescript e muito mais.
           </p>
         </div>
       </section>

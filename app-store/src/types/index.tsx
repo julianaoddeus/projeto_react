@@ -1,22 +1,27 @@
-// Strapi response types
-export interface StrapiResponse<T> {
-  data: T;
-  meta?: {
-    pagination?: {
+export interface ResponseProducts {
+  data: Product[];
+  meta: {
+    pagination: {
       page: number;
-      pageSize: number;
       pageCount: number;
+      pageSize: number;
       total: number;
     };
   };
 }
 
-export interface StrapiData<T> {
+export interface Product {
   id: number;
-  attributes: T;
+  documentId: string;
+  title: string;
+  description: string;
+  price: number;
+  stock: number;
+  image?: {
+    url: string;
+  };
 }
 
-// Auth types
 export interface User {
   id: number;
   username: string;
@@ -28,70 +33,17 @@ export interface AuthResponse {
   user: User;
 }
 
-export interface LoginCredentials {
-  identifier: string;
-  password: string;
-}
-
-export interface RegisterCredentials {
-  username: string;
-  email: string;
-  password: string;
-}
-
-// Product types
-export interface ProductAttributes {
-  name: string;
-  description: string;
-  price: number;
-  image?: {
-    data: {
-      attributes: {
-        url: string;
-      };
+export interface CartItem {
+  id: number;
+  documentId: string;
+  quantity: number;
+  product: {
+    id: number;
+    documentId: string;
+    title: string;
+    price: number;
+    image?: {
+      url: string;
     };
   };
-  category?: {
-    data: StrapiData<CategoryAttributes>;
-  };
-  createdAt: string;
-  updatedAt: string;
 }
-
-export type Product = StrapiData<ProductAttributes>
-
-// Category types
-export interface CategoryAttributes {
-  name: string;
-  description?: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-// export interface Category extends StrapiData<CategoryAttributes> {}
-
-// // Cart types
-// export interface CartItemAttributes {
-//   quantity: number;
-//   product: {
-//     data: Product;
-//   };
-//   createdAt: string;
-//   updatedAt: string;
-// }
-
-// export interface CartItem extends StrapiData<CartItemAttributes> {}
-
-// export interface CartAttributes {
-//   total: number;
-//   cart_items: {
-//     data: CartItem[];
-//   };
-//   user: {
-//     data: StrapiData<{ username: string; email: string }>;
-//   };
-//   createdAt: string;
-//   updatedAt: string;
-// }
-
-// export interface Cart extends StrapiData<CartAttributes> {}

@@ -14,14 +14,8 @@
     "title": {
       "type": "string"
     },
-    "price": {
-      "type": "decimal"
-    },
     "description": {
-      "type": "text"
-    },
-    "stock": {
-      "type": "integer"
+      "type": "string"
     },
     "image": {
       "type": "media",
@@ -32,6 +26,14 @@
         "videos",
         "audios"
       ]
+    },
+    "price": {
+      "type": "decimal",
+      "required": true
+    },
+    "stock": {
+      "type": "integer",
+      "required": true
     },
     "categorias": {
       "type": "relation",

@@ -1,36 +1,61 @@
 import { useState } from "react";
-
+import { useQuery } from "@tanstack/react-query";
 import { Search, Filter, X } from "lucide-react";
+import { api } from "../services/api";
+import ProductCard from "../_components/ProductCard";
+import type { ResponseProducts } from "../types";
+import { useDebounce } from "../hooks/usedebounce";
+import Pagination from "../_components/Pagination";
+import { MINUTES_30 } from "../lib/constants/constants";
+
+
+
 
 export function Products() {
- 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
-  const [showFilters, setShowFilters] = useState(false);
+  const [page, setPage] = useState<number>(1);
+  const pageSize = 2;
+
+  const debouncedSearch = useDebounce<string>(searchTerm, 500);
+
+  const { data, isLoading, isError } = useQuery<ResponseProducts>({
+    queryKey: ["products", page, debouncedSearch],
+    queryFn: async () => {
+      let url = `/products?populate=image&pagination[page]=${page}&pagination[pageSize]=${pageSize}`;
+
+      if (debouncedSearch) {
+        url += `&filters[$or][0][title][$containsi]=${debouncedSearch}`;
+        url += `&filters[$or][1][description][$containsi]=${debouncedSearch}`;
+      }
+
+      const { data } = await api.get(url);
+      return data;
+    },
+
+    staleTime: MINUTES_30,
+    placeholderData: (previousData) => previousData,
+  });
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
+    setPage(1);
   };
-
- 
-  const handleCategorySelect = (categoryId: number | null) => {
-    setSelectedCategory(categoryId);
-    setShowFilters(false);
-  };
-
 
   const clearFilters = () => {
     setSearchTerm("");
     setSelectedCategory(null);
   };
 
-  //   if (productsError) {
-  //     return (
-  //       <div className="container mx-auto px-4 py-12 text-center">
-  //         <p className="text-destructive">Erro ao carregar produtos. Tente novamente.</p>
-  //       </div>
-  //     );
-  //   }
+  if (isError) {
+    return (
+      <div className="container mx-auto px-4 py-12 text-center">
+        <p className="text-destructive">
+          Erro ao carregar produtos. Tente novamente.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -57,7 +82,6 @@ export function Products() {
         {/* Category Filter Button */}
         <div className="relative">
           <button
-            onClick={() => setShowFilters((prev) => !prev)}
             className={`flex items-center gap-2 px-4 py-3 border rounded-lg transition-colors ${
               selectedCategory
                 ? "border-primary bg-blue-50 text-primary"
@@ -65,41 +89,11 @@ export function Products() {
             }`}
           >
             <Filter className="w-5 h-5" />
-            {/* <span>
-              {selectedCategory
-                ? categories?.find((c) => c.id === selectedCategory)?.attributes.name
-                : 'Categorias'}
-            </span> */}
           </button>
-
-          {/* Dropdown */}
-          {showFilters && (
-            <div className="absolute top-full mt-2 right-0 bg-white border border-muted rounded-lg shadow-lg z-10 min-w-[200px]">
-              <button
-                onClick={() => handleCategorySelect(null)}
-                className={`w-full px-4 py-2 text-left hover:bg-muted transition-colors ${
-                  !selectedCategory ? "text-primary font-medium" : ""
-                }`}
-              >
-                Todas as categorias
-              </button>
-              {/* {categories?.map((category) => (
-                <button
-                  key={category.id}
-                  onClick={() => handleCategorySelect(category.id)}
-                  className={`w-full px-4 py-2 text-left hover:bg-muted transition-colors ${
-                    selectedCategory === category.id ? 'text-primary font-medium' : ''
-                  }`}
-                >
-                  {category.attributes.name}
-                </button>
-              ))} */}
-            </div>
-          )}
         </div>
 
         {/* Clear Filters */}
-        {(searchTerm || selectedCategory) && (
+        {searchTerm && (
           <button
             onClick={clearFilters}
             className="flex items-center gap-2 px-4 py-3 text-destructive hover:bg-red-50 rounded-lg transition-colors"
@@ -111,24 +105,18 @@ export function Products() {
       </div>
 
       {/* Results count */}
-      {/* <p className="text-secondary mb-4">
-        {filteredProducts.length} produto(s) encontrado(s)
-      </p> */}
+      <p className="text-secondary mb-4">
+        {data?.data.length} produto(s) encontrado(s)
+      </p>
 
       {/* Products Grid */}
-      <div className="text-center py-12">
-        <p className="text-secondary text-lg">Nenhum produto encontrado.</p>
-        <button
-          onClick={clearFilters}
-          className="mt-4 text-primary hover:underline"
-        >
-          Limpar filtros e ver todos
-        </button>
-      </div>
-      {/* {productsLoading ? (
+      {isLoading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {[...Array(8)].map((_, i) => (
-            <div key={i} className="bg-white rounded-xl shadow-sm overflow-hidden animate-pulse">
+            <div
+              key={i}
+              className="bg-white rounded-xl shadow-sm overflow-hidden animate-pulse"
+            >
               <div className="aspect-square bg-muted" />
               <div className="p-4 space-y-3">
                 <div className="h-5 bg-muted rounded w-3/4" />
@@ -138,10 +126,10 @@ export function Products() {
             </div>
           ))}
         </div>
-      ) : filteredProducts.length > 0 ? (
+      ) : data?.data && data.data.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {filteredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
+          {data.data.map((product) => (
+            <ProductCard key={product.documentId} product={product} />
           ))}
         </div>
       ) : (
@@ -154,7 +142,10 @@ export function Products() {
             Limpar filtros e ver todos
           </button>
         </div>
-      )} */}
+      )}
+
+      {/* Pagination */}
+      <Pagination page={page} meta={data?.meta} setPage={setPage} />
     </div>
   );
 }

@@ -3,7 +3,7 @@ import type { RootState } from "..";
 import type { CartItem, Product, ResponseCartItems } from "../../types";
 import { logout } from "./auth_slice";
 import { api } from "../../services/api";
-import { calculateTotal } from "../../lib/utils/calculateTotal";
+import { calculateTotal } from "../../lib/utils/calculate-total";
 
 const StatusCart = {
   IDLE: "idle",
@@ -48,7 +48,10 @@ export const fetchCartItems = createAsyncThunk(
 
 export const addCartItemAsync = createAsyncThunk(
   "cart/addCartItemAsync",
-  async ({ product, quantity = 1 }: { product: Product; quantity?: number }, { dispatch, rejectWithValue }) => {
+  async (
+    { product, quantity = 1 }: { product: Product; quantity?: number },
+    { dispatch, rejectWithValue },
+  ) => {
     try {
       const { data: existing } = await api.get<ResponseCartItems>(
         `/cart-items?filters[product][documentId][$eq]=${product.documentId}&populate[product][populate][image]=*`,
@@ -83,6 +86,7 @@ export const removeCartItemAsync = createAsyncThunk(
   "cart/removeCartItemAsync",
   async (documentId: string, { rejectWithValue }) => {
     try {
+      console.log("delete", documentId);
       await api.delete(`/cart-items/${documentId}`);
       return documentId;
     } catch {
@@ -98,7 +102,7 @@ export const updateCartItemAsync = createAsyncThunk(
     { rejectWithValue },
   ) => {
     try {
-      console.log("updateCartItemAsync", documentId)
+      console.log("updateCartItemAsync", documentId);
       const { data } = await api.put(`/cart-items/${documentId}`, {
         data: { quantity },
       });
@@ -108,7 +112,6 @@ export const updateCartItemAsync = createAsyncThunk(
     }
   },
 );
-
 
 const cartSlice = createSlice({
   name: "cart",

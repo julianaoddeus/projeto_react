@@ -44,6 +44,7 @@ export interface CartItem {
     description: string;
     price: number;
     stock: number;
+    duration: number;
     image?: {
       url: string;
     };
@@ -52,4 +53,29 @@ export interface CartItem {
 
 export interface ResponseCartItems {
   data: CartItem[];
+}
+
+export interface ResponseCourses {
+  data: Course[];
+}
+
+export interface Course {
+  id: number;
+  documentId: string;  
+  progress: number;
+  inicialDate: Date;
+  durationInMonths: number;
+  expiresAt: Date;
+  product: {
+    id: number;
+    documentId: string;
+    title: string;
+    description: string;
+    price: number;
+    stock: number;
+    duration: number;
+    image?: {
+      url: string;
+    };
+  };
 }

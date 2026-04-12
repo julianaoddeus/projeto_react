@@ -103,10 +103,11 @@ export function Home() {
               Meus Cursos
             </h2>
             <p className="text-secondary mb-8 max-w-xl mx-auto">
-              Comece a assistir suas aulas, não perca mais tempo e se torne o profissional mais desejado do mercado!
+              Comece a assistir suas aulas, não perca mais tempo e se torne o
+              profissional mais desejado do mercado!
             </p>
             <Link
-              to="/"
+              to="/courses"
               className="inline-block px-8 py-3 bg-pink-400 text-white rounded-lg font-medium hover:opacity-80 transition-colors"
             >
               Começar

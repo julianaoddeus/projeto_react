@@ -7,6 +7,7 @@ import Login from "../pages/login";
 import Products from "../pages/products";
 import ProductDetailPage from "../pages/product-datails";
 import CartPage from "../pages/cart";
+import CoursesPage from "../pages/courses";
 
 export const Routers = () => {
   return (
@@ -20,6 +21,7 @@ export const Routers = () => {
 
         <Route element={<ProtectedRoute />}>
           <Route path="/cart" element={<CartPage />} />
+          <Route path="/courses" element={<CoursesPage />} />
         </Route>
       </Route>
     </Routes>

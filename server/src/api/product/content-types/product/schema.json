@@ -39,6 +39,9 @@
       "relation": "oneToMany",
       "target": "api::category.category",
       "mappedBy": "produto"
+    },
+    "duration": {
+      "type": "integer"
     }
   }
 }

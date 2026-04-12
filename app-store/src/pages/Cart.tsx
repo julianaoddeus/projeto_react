@@ -8,14 +8,16 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   clearCart,
   fetchCartItems,
+  removeCartItemAsync,
   selectCart,
 } from "../store/slices/cart-slice";
 import type { AppDispatch } from "../store";
 
-
-import { calculateTotal } from "../lib/utils/calculateTotal";
+import { calculateTotal } from "../lib/utils/calculate-total";
 import { formatCurrency } from "../utils";
-import CartItemCard from "../_components/Cart/CartItemCard";
+import CartItemCard from "../_components/CartItemCard";
+import { addCourseAsync } from "../store/slices/course-slice";
+import type { CartItem, Course } from "../types";
 
 export function CartPage() {
   const dispatch = useDispatch<AppDispatch>();
@@ -34,14 +36,47 @@ export function CartPage() {
     toast.success("Carrinho limpo com sucesso!");
   }, [dispatch, items.length]);
 
-  const handleCheckout = useCallback(() => {
+  const mapCartItemToCourse = (item: CartItem): Partial<Course> => {
+    const now = new Date();
+
+    const expiresAt = new Date();
+    expiresAt.setMonth(expiresAt.getMonth() + 12);
+
+    return {
+      progress: 0,
+      inicialDate: now,
+      durationInMonths: 12,
+      expiresAt,
+      documentId: item.product.documentId,
+      product: item.product,
+    };
+  };
+
+  const handleCheckout = useCallback(async () => {
     if (items.length === 0) {
       toast.warn("Seu carrinho está vazio!");
       return;
     }
 
-    toast.success("Redirecionando para o checkout...");
-  }, [items.length]);
+    try {
+      await Promise.all(
+        items.map((item) =>
+          dispatch(addCourseAsync(mapCartItemToCourse(item))).unwrap(),
+        ),
+      );
+
+      setTimeout(async () => {
+        await Promise.all(
+          items.map((item) => dispatch(removeCartItemAsync(item.documentId))),
+        );
+      }, 5000);
+
+      toast.success("Compra realizada com sucesso!");
+    } catch (error) {
+      console.error("====ERRO ==== cart page", error);
+      toast.error("Erro ao finalizar compra. Tente novamente.");
+    }
+  }, [dispatch, items]);
 
   // Carrinho vazio
   if (items.length === 0) {
@@ -55,13 +90,13 @@ export function CartPage() {
             Seu carrinho está vazio
           </h1>
           <p className="text-secondary mb-6">
-            Explore nossos produtos e adicione itens ao seu carrinho.
+            Explore nossos cursos e adicione ao seu carrinho.
           </p>
           <Link
             to="/products"
             className="inline-block px-8 py-3 border-2 border-pink-400 text-pink-400 rounded-lg font-medium hover:text-pink-500 hover:border-pink-500 hover:bg-opacity-10  transition-colors"
           >
-            Ver Produtos
+            Ver cursos disponíeis
           </Link>
         </div>
       </div>

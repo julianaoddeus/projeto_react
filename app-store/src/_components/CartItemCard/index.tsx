@@ -8,10 +8,11 @@ import { useDispatch } from "react-redux";
 import type { CartItem } from "../../types";
 import { generateImageURL } from "../../lib/utils/generate-image-url";
 import type { AppDispatch } from "../../store";
-import { removeCartItemAsync, updateCartItemAsync } from "../../store/slices/cart-slice";
+import {
+  removeCartItemAsync,
+  updateCartItemAsync,
+} from "../../store/slices/cart-slice";
 import { formatCurrency } from "../../utils";
-
-
 
 interface CartItemCardProps {
   item: CartItem;
@@ -24,8 +25,8 @@ function CartItemCardPage({ item }: CartItemCardProps) {
   const itemTotal = product?.price * quantity;
   const dispatch = useDispatch<AppDispatch>();
 
-  const handleRemove = useCallback(() => {
-    dispatch(removeCartItemAsync(documentId));
+  const handleRemove = useCallback(async () => {
+    await dispatch(removeCartItemAsync(documentId));
     toast.info(`${product.title} removido do carrinho`);
   }, [dispatch, documentId, product.title]);
 

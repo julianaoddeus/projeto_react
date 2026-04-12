@@ -3,16 +3,15 @@ import { Link } from "react-router";
 import { Plus, Minus, Trash2 } from "lucide-react";
 
 import { toast } from "react-toastify";
-import type { CartItem } from "../types";
-import { useDispatch } from "react-redux";
-import type { AppDispatch } from "../store";
 
-import {
-  removeCartItemAsync,
-  updateCartItemAsync,
-} from "../store/slices/cart-slice";
-import { generateImageURL } from "../lib/utils/generate-image-url";
-import { formatCurrency } from "../utils";
+import { useDispatch } from "react-redux";
+import type { CartItem } from "../../types";
+import { generateImageURL } from "../../lib/utils/generate-image-url";
+import type { AppDispatch } from "../../store";
+import { removeCartItemAsync, updateCartItemAsync } from "../../store/slices/cart-slice";
+import { formatCurrency } from "../../utils";
+
+
 
 interface CartItemCardProps {
   item: CartItem;

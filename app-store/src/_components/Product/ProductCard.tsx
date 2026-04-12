@@ -2,15 +2,14 @@ import { memo, useCallback, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { ShoppingCart, Plus } from "lucide-react";
 
-
-import type { Product } from "../types";
+import type { Product } from "../../types";
 import { useSelector } from "react-redux";
-import { selectAuth } from "../store/slices/auth_slice";
-import { useAppDispatch } from "../store";
+import { selectAuth } from "../../store/slices/auth_slice";
+import { useAppDispatch } from "../../store";
 import { toast } from "react-toastify";
-import { addCartItemAsync } from "../store/slices/cart-slice";
-import { generateImageURL } from "../lib/utils/generate-image-url";
-import { formatCurrency } from "../utils";
+import { addCartItemAsync } from "../../store/slices/cart-slice";
+import { generateImageURL } from "../../lib/utils/generate-image-url";
+import { formatCurrency } from "../../utils";
 
 interface ProductCardProps {
   product: Product;
@@ -32,7 +31,7 @@ function ProductCardComponent({ product }: ProductCardProps) {
       return navigate("/login");
     }
 
-    await dispatch(addCartItemAsync(product)).unwrap();
+    await dispatch(addCartItemAsync({ product, quantity })).unwrap();
     toast.success(`${quantity} - ${product.title} adicionado(s) ao carrinho!`);
   }, [dispatch, product, quantity, isAuthenticated, navigate]);
 

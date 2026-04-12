@@ -12,9 +12,10 @@ import {
 } from "../store/slices/cart-slice";
 import type { AppDispatch } from "../store";
 
-import { CartItemCard } from "../_components/CartItemCard";
+
 import { calculateTotal } from "../lib/utils/calculateTotal";
 import { formatCurrency } from "../utils";
+import CartItemCard from "../_components/Cart/CartItemCard";
 
 export function CartPage() {
   const dispatch = useDispatch<AppDispatch>();

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Search, Filter, X } from "lucide-react";
 import { api } from "../services/api";
-import ProductCard from "../_components/ProductCard";
+import ProductCard from "../_components/Product/ProductCard";
 import type { ResponseProducts } from "../types";
 import { useDebounce } from "../hooks/usedebounce";
 import Pagination from "../_components/Pagination";

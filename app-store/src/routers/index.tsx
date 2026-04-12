@@ -1,12 +1,12 @@
 import { Route, Routes } from "react-router";
 import { ProtectedRoute } from "./protected-route";
 import Layout from "../_components/Layout";
-import Home from "../pages/Home";
-import Register from "../pages/Register";
-import Login from "../pages/Login";
-import Products from "../pages/Products";
-import ProductDetailPage from "../pages/ProductDatails";
-import CartPage from "../pages/Cart";
+import Home from "../pages/home";
+import Register from "../pages/register";
+import Login from "../pages/login";
+import Products from "../pages/products";
+import ProductDetailPage from "../pages/product-datails";
+import CartPage from "../pages/cart";
 
 export const Routers = () => {
   return (

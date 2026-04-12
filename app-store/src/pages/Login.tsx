@@ -10,7 +10,7 @@ import { api } from "../services/api";
 import { setCredentials } from "../store/slices/auth_slice";
 
 export function Login() {
-  const [email, setEmail] = useState("");
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
@@ -24,12 +24,12 @@ export function Login() {
   const loginMutation = useMutation({
     mutationFn: async () => {
       const response = await api.post<AuthResponse>("/auth/local", {
-        email,
+        identifier,
         password,
       });
       return response.data;
     },
-    onSuccess: (data) => {
+    onSuccess: (data) => {      
       dispatch(setCredentials({ user: data.user, token: data.jwt }));
 
       toast.success(`Bem-vindo de volta, ${data.user.username}!`);
@@ -41,7 +41,7 @@ export function Login() {
   });
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
+    setIdentifier(e.target.value);
   };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -56,7 +56,7 @@ export function Login() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    if (!email || !password) {
+    if (!identifier || !password) {
       toast.warn("Preencha todos os campos!");
       return;
     }
@@ -91,7 +91,7 @@ export function Login() {
                 <input
                   id="email"
                   type="email"
-                  value={email}
+                  value={identifier}
                   onChange={handleEmailChange}
                   placeholder="seu@email.com"
                   className="w-full pl-10 pr-4 py-3 bg-transparent border border-muted rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"

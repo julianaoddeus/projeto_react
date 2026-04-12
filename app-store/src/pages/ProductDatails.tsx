@@ -1,19 +1,32 @@
-import { useState, useEffect, useCallback } from "react";
-import { useParams, Link } from "react-router";
+import { useState, useCallback } from "react";
+import { useParams, Link, useNavigate } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, ShoppingCart, Plus, Minus } from "lucide-react";
-import type { Product } from "../types";
 
 import { toast } from "react-toastify";
 import { api } from "../services/api";
-import { formatCurrency, generateImageUrlProduct } from "../lib/utils";
+
+import { useSelector } from "react-redux";
+import { selectAuth } from "../store/slices/auth_slice";
+import { useAppDispatch } from "../store";
+import { addCartItemAsync } from "../store/slices/cart-slice";
+import type { Product } from "../types";
+import { generateImageURL } from "../lib/utils/generate-image-url";
+import { formatCurrency } from "../utils";
+
+interface ResponseSingleProduct {
+  data: Product;
+}
 
 export function ProductDetailPage() {
   const { documentId } = useParams<{ documentId: string }>();
+  const { isAuthenticated } = useSelector(selectAuth);
   const [quantity, setQuantity] = useState(1);
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
-  const { data, isLoading, isError } = useQuery<Product>({
-    queryKey: ["product", documentId],
+  const { data, isLoading, isError } = useQuery<ResponseSingleProduct>({
+    queryKey: ["product", documentId, isAuthenticated],
     queryFn: async () => {
       const { data } = await api.get(
         `/products/${documentId}?populate=image&fields=*`,
@@ -23,7 +36,8 @@ export function ProductDetailPage() {
     enabled: !!documentId,
   });
 
-  const product = data;
+  const product = data?.data;
+  const imageURL = generateImageURL(product?.image?.url);
 
   const incrementQuantity = useCallback(() => {
     setQuantity((prev) => prev + 1);
@@ -33,19 +47,17 @@ export function ProductDetailPage() {
     setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
   }, []);
 
-  // Função que muda estado do componente (demonstra rubrica)
   const handleAddToCart = useCallback(() => {
     if (!product) return;
 
-    toast.success(`${quantity}x ${product.title} adicionado(s) ao carrinho!`);
-  }, [product, quantity]);
+    if (!isAuthenticated) {
+      toast.warn("Faça login para adicionar ao carrinho!");
+      return navigate("/login");
+    }
 
-  const imageURL = generateImageUrlProduct(product?.image?.url);
-
-  useEffect(() => {
-    console.log("Quantidade selecionada:", quantity);
-    console.log("Produto carregado:", product?.title);
-  }, [quantity, product]);
+    dispatch(addCartItemAsync({ product, quantity }));
+    toast.success(`${quantity} - ${product.title} adicionado(s) ao carrinho!`);
+  }, [dispatch, product, quantity, isAuthenticated, navigate]);
 
   if (isLoading) {
     return (
@@ -93,7 +105,7 @@ export function ProductDetailPage() {
         <div className="aspect-square rounded-xl overflow-hidden bg-gray-700 shadow-sm">
           <img
             src={imageURL}
-            alt={product.title}
+            alt={product?.title}
             className="w-full h-full object-cover"
           />
         </div>
@@ -101,15 +113,15 @@ export function ProductDetailPage() {
         {/* Product Info */}
         <div className="flex flex-col">
           <h1 className="text-3xl font-bold text-pink-700 mb-4">
-            {product.title}
+            {product?.title}
           </h1>
 
           <p className="text-secondary leading-relaxed mb-6">
-            {product.description}
+            {product?.description}
           </p>
 
           <div className="text-3xl font-bold text-primary mb-8">
-            {formatCurrency(product.price)}
+            {formatCurrency(product?.price)}
           </div>
 
           {/* Quantity Selector */}
@@ -141,28 +153,28 @@ export function ProductDetailPage() {
             <div className="flex justify-between items-center">
               <span className="text-secondary">Total:</span>
               <span className="text-2xl font-bold text-foreground">
-                {formatCurrency(product.price * quantity)}
+                {formatCurrency(product?.price * quantity)}
               </span>
             </div>
           </div>
 
           {/* Add to Cart Button */}
-          <button
-            onClick={handleAddToCart}
-            className="flex items-center justify-center gap-2 w-full py-4 bg-primary text-white rounded-lg font-medium hover:bg-blue-700 transition-colors text-lg"
-          >
-            <ShoppingCart className="w-6 h-6" />
-            Adicionar ao Carrinho
-          </button>
-
-          {
+          {isAuthenticated ? (
+            <button
+              onClick={handleAddToCart}
+              className="flex items-center justify-center gap-2 w-full py-4 bg-primary text-white rounded-lg font-medium hover:bg-blue-700 transition-colors text-lg"
+            >
+              <ShoppingCart className="w-6 h-6" />
+              Adicionar ao Carrinho
+            </button>
+          ) : (
             <p className="text-center text-secondary mt-4">
               <Link to="/login" className="text-primary hover:underline">
                 Faça login
               </Link>{" "}
               para adicionar ao carrinho
             </p>
-          }
+          )}
         </div>
       </div>
     </div>

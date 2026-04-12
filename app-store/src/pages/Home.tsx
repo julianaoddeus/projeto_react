@@ -1,7 +1,10 @@
 import { Link } from "react-router";
 import { ShoppingBag, Tag, Shield } from "lucide-react";
+import { useSelector } from "react-redux";
+import { selectAuth } from "../store/slices/auth_slice";
 
 export function Home() {
+  const { isAuthenticated } = useSelector(selectAuth);
   return (
     <div className="flex flex-col">
       <section className="bg-gray-800 text-white py-20">
@@ -75,23 +78,42 @@ export function Home() {
         </div>
       </section>
 
-      <section className="py-16 bg-muted">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-500 mb-4">
-            Pronto para começar?
-          </h2>
-          <p className="text-secondary mb-8 max-w-xl mx-auto">
-            Crie sua conta agora e aproveite ofertas exclusivas para novos
-            clientes.
-          </p>
-          <Link
-            to="/register"
-            className="inline-block px-8 py-3 bg-pink-400 text-white rounded-lg font-medium hover:opacity-80 transition-colors"
-          >
-            Criar Conta Grátis
-          </Link>
-        </div>
-      </section>
+      {!isAuthenticated ? (
+        <section className="py-16 bg-muted">
+          <div className="container mx-auto px-4 text-center">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-500 mb-4">
+              Pronto para começar?
+            </h2>
+            <p className="text-secondary mb-8 max-w-xl mx-auto">
+              Crie sua conta agora e aproveite ofertas exclusivas para novos
+              clientes.
+            </p>
+            <Link
+              to="/register"
+              className="inline-block px-8 py-3 bg-pink-400 text-white rounded-lg font-medium hover:opacity-80 transition-colors"
+            >
+              Criar Conta Grátis
+            </Link>
+          </div>
+        </section>
+      ) : (
+        <section className="py-16 bg-muted">
+          <div className="container mx-auto px-4 text-center">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-500 mb-4">
+              Meus Cursos
+            </h2>
+            <p className="text-secondary mb-8 max-w-xl mx-auto">
+              Comece a assistir suas aulas, não perca mais tempo e se torne o profissional mais desejado do mercado!
+            </p>
+            <Link
+              to="/"
+              className="inline-block px-8 py-3 bg-pink-400 text-white rounded-lg font-medium hover:opacity-80 transition-colors"
+            >
+              Começar
+            </Link>
+          </div>
+        </section>
+      )}
 
       <section className="py-16 bg-background">
         <div className="container mx-auto px-4">

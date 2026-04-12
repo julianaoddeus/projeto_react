@@ -2,6 +2,8 @@ import { Link } from "react-router";
 import { ShoppingCart, User as UserIcon, LogOut, Menu, X } from "lucide-react";
 import { toast } from "react-toastify";
 import type { User } from "../../types";
+import { useSelector } from "react-redux";
+import { selectCart } from "../../store/slices/cart-slice";
 
 interface HeaderDesktopProps {
   isAuthenticated: boolean;
@@ -18,14 +20,14 @@ export function Desktop({
   isMenuOpen,
   onToggleMenu,
   onCloseMenu,
-  handleUserLogout
+  handleUserLogout,
 }: HeaderDesktopProps) {
   const handleLogout = () => {
     handleUserLogout();
     toast.success("Logout realizado com sucesso!");
     onCloseMenu();
   };
-
+  const { totalQuantity } = useSelector(selectCart);
   return (
     <>
       <nav className="hidden md:flex items-center gap-6">
@@ -50,7 +52,9 @@ export function Desktop({
               className="relative p-2 text-gray-500 hover:text-primary transition-colors"
             >
               <ShoppingCart className="w-6 h-6" color="red" />
-              <span className="absolute -top-1 -right-1 bg-accent text-black text-xs w-5 h-5 rounded-full flex items-center justify-center"></span>
+              <span className="absolute -top-1 -right-1 bg-accent text-xs w-5 h-5 rounded-full flex items-center justify-center">
+                {totalQuantity}
+              </span>
             </Link>
             <div className="flex items-center gap-2">
               <UserIcon className="w-5 h-5 text-secondary" />

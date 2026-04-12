@@ -8,9 +8,6 @@ import { useDebounce } from "../hooks/usedebounce";
 import Pagination from "../_components/Pagination";
 import { MINUTES_30 } from "../lib/constants/constants";
 
-
-
-
 export function Products() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
@@ -36,6 +33,8 @@ export function Products() {
     staleTime: MINUTES_30,
     placeholderData: (previousData) => previousData,
   });
+
+  const products = data?.data;
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
@@ -106,7 +105,7 @@ export function Products() {
 
       {/* Results count */}
       <p className="text-secondary mb-4">
-        {data?.data.length} produto(s) encontrado(s)
+        {products?.length} produto(s) encontrado(s)
       </p>
 
       {/* Products Grid */}
@@ -126,9 +125,9 @@ export function Products() {
             </div>
           ))}
         </div>
-      ) : data?.data && data.data.length > 0 ? (
+      ) : products && products.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {data.data.map((product) => (
+          {products.map((product) => (
             <ProductCard key={product.documentId} product={product} />
           ))}
         </div>

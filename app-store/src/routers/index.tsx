@@ -5,20 +5,21 @@ import Home from "../pages/Home";
 import Register from "../pages/Register";
 import Login from "../pages/Login";
 import Products from "../pages/Products";
-import ProductDetailPage from '../pages/ProductDatails';
+import ProductDetailPage from "../pages/ProductDatails";
+import CartPage from "../pages/Cart";
 
 export const Routers = () => {
   return (
     <Routes>
       <Route element={<Layout />}>
         <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login/>} />
+        <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/products" element={<Products/>} />
+        <Route path="/products" element={<Products />} />
         <Route path="/products/:documentId" element={<ProductDetailPage />} />
 
         <Route element={<ProtectedRoute />}>
-          <Route path="/cart" element={<>Carrinho</>} />
+          <Route path="/cart" element={<CartPage />} />
         </Route>
       </Route>
     </Routes>

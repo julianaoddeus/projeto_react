@@ -1,22 +1,40 @@
-import { memo, useCallback } from "react";
-import { Link } from "react-router";
+import { memo, useCallback, useState } from "react";
+import { Link, useNavigate } from "react-router";
 import { ShoppingCart, Plus } from "lucide-react";
 
-import { formatCurrency } from "../lib/utils";
-import { HOST_API } from "../services/api";
+
 import type { Product } from "../types";
+import { useSelector } from "react-redux";
+import { selectAuth } from "../store/slices/auth_slice";
+import { useAppDispatch } from "../store";
+import { toast } from "react-toastify";
+import { addCartItemAsync } from "../store/slices/cart-slice";
+import { generateImageURL } from "../lib/utils/generate-image-url";
+import { formatCurrency } from "../utils";
 
 interface ProductCardProps {
   product: Product;
 }
 
 function ProductCardComponent({ product }: ProductCardProps) {
+  const { isAuthenticated } = useSelector(selectAuth);
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const [quantity] = useState(1);
 
+  const imageURL = generateImageURL(product?.image?.url);
 
+  const handleAddToCart = useCallback(async () => {
+    if (!product) return;
 
-  const handleAddToCart = useCallback(() => {
-    
-  }, []);
+    if (!isAuthenticated) {
+      toast.warn("Faça login para adicionar ao carrinho!");
+      return navigate("/login");
+    }
+
+    await dispatch(addCartItemAsync(product)).unwrap();
+    toast.success(`${quantity} - ${product.title} adicionado(s) ao carrinho!`);
+  }, [dispatch, product, quantity, isAuthenticated, navigate]);
 
   return (
     <div className="bg-gray-700 rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow group">
@@ -25,11 +43,7 @@ function ProductCardComponent({ product }: ProductCardProps) {
         className="block relative aspect-square overflow-hidden"
       >
         <img
-          src={
-            product.image?.url
-              ? `${HOST_API}${product.image.url}`
-              : "https://via.placeholder.com/300x300?text=Sem+Imagem"
-          }
+          src={imageURL}
           alt={product.title}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           onError={(e) => {

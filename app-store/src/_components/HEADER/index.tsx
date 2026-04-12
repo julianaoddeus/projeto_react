@@ -48,6 +48,7 @@ export function Header() {
           user={user}
           onToggleMenu={toggleMenu}
           onCloseMenu={closeMenu}
+          handleUserLogout={handleUserLogout}
         />
       </div>
     </header>

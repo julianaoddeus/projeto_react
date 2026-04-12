@@ -12,10 +12,17 @@
   "pluginOptions": {},
   "attributes": {
     "title": {
-      "type": "string"
+      "type": "string",
+      "required": true
     },
     "description": {
       "type": "string"
+    },
+    "price": {
+      "type": "decimal"
+    },
+    "stock": {
+      "type": "integer"
     },
     "image": {
       "type": "media",
@@ -27,18 +34,11 @@
         "audios"
       ]
     },
-    "price": {
-      "type": "decimal",
-      "required": true
-    },
-    "stock": {
-      "type": "integer",
-      "required": true
-    },
     "categorias": {
       "type": "relation",
       "relation": "oneToMany",
-      "target": "api::category.category"
+      "target": "api::category.category",
+      "mappedBy": "produto"
     }
   }
 }

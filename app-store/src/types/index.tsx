@@ -41,9 +41,15 @@ export interface CartItem {
     id: number;
     documentId: string;
     title: string;
+    description: string;
     price: number;
+    stock: number;
     image?: {
       url: string;
     };
   };
+}
+
+export interface ResponseCartItems {
+  data: CartItem[];
 }

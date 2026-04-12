@@ -9,6 +9,7 @@ interface HeaderMobileProps {
   user: User | undefined;
   onToggleMenu: () => void;
   onCloseMenu: () => void;
+  handleUserLogout: () => void;
 }
 
 export function Mobile({
@@ -17,10 +18,12 @@ export function Mobile({
   user,
   onToggleMenu,
   onCloseMenu,
+  handleUserLogout,
 }: HeaderMobileProps) {
   const navigate = useNavigate();
 
   const handleLogout = () => {
+    handleUserLogout();
     toast.success("Logout realizado com sucesso!");
     navigate("/");
     onCloseMenu();
@@ -60,6 +63,7 @@ export function Mobile({
                 >
                   <ShoppingCart className="w-5 h-5" color="red" />
                   Carrinho
+                  <span className="absolute -top-1 -right-1 bg-accent text-xs w-5 h-5 rounded-full flex items-center justify-center"></span>
                 </Link>
                 <button
                   onClick={handleLogout}

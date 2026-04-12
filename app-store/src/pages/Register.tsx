@@ -32,6 +32,7 @@ export function Register() {
     },
     onSuccess: (data) => {
       dispatch(setCredentials({ user: data.user, token: data.jwt }));
+      
       toast.success("Cadastro realizado com sucesso!");
       navigate("/", { replace: true });
     },
@@ -56,6 +57,7 @@ export function Register() {
     }
 
     registerMutation.mutate();
+    
   };
 
   return (

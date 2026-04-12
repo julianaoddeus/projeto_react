@@ -1,8 +1,10 @@
+import { useSelector } from "react-redux";
 import { Navigate, Outlet, useLocation } from "react-router";
 import { toast } from "react-toastify";
+import { selectAuth } from "../store/slices/auth_slice";
 
 export const ProtectedRoute = () => {
-  const isAuthenticated = false;
+  const { isAuthenticated } = useSelector(selectAuth);
   const location = useLocation();
 
   if (!isAuthenticated) {

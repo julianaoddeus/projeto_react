@@ -4,7 +4,6 @@ import { useDispatch } from "react-redux";
 import cartReducer from './slices/cart-slice';
 
 
-
 export const store = configureStore({
   reducer: {
     auth: authReducer,

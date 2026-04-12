@@ -41,7 +41,13 @@ export function Desktop({
           to="/products"
           className="text-gray-500 hover:text-pink-500 transition-colors"
         >
-          Produtos
+          Cursos
+        </Link>
+        <Link
+          to="/courses"
+          className="text-gray-500 hover:text-pink-500 transition-colors"
+        >
+          Meus Cursos
         </Link>
       </nav>
       <div className="hidden md:flex items-center gap-4">

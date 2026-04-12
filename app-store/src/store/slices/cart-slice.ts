@@ -74,7 +74,7 @@ export const addCartItemAsync = createAsyncThunk(
 
       return { ...data.data, product } as CartItem;
     } catch (error) {
-      console.error("=== ERRO ===", error);
+      console.error("=== ERRO === cart-slice", error);
       return rejectWithValue("Não foi possível adicionar o item ao carrinho.");
     }
   },
@@ -108,6 +108,7 @@ export const updateCartItemAsync = createAsyncThunk(
     }
   },
 );
+
 
 const cartSlice = createSlice({
   name: "cart",

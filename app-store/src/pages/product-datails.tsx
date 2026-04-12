@@ -83,7 +83,7 @@ export function ProductDetailPage() {
       <div className="container mx-auto px-4 py-12 text-center">
         <p className="text-destructive mb-4">Produto não encontrado.</p>
         <Link to="/products" className="text-primary hover:underline">
-          Voltar aos produtos
+          Voltar aos cursos
         </Link>
       </div>
     );
@@ -97,7 +97,7 @@ export function ProductDetailPage() {
         className="inline-flex items-center gap-2 text-secondary hover:text-primary mb-8 transition-colors"
       >
         <ArrowLeft className="w-5 h-5" />
-        Voltar aos produtos
+        Voltar aos cursos
       </Link>
 
       <div className="grid md:grid-cols-2 gap-8 lg:gap-12">

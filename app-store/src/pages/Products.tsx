@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Search, Filter, X } from "lucide-react";
 import { api } from "../services/api";
-import ProductCard from "../_components/Product/ProductCard";
+import ProductCard from "../_components/ProductCard";
 import type { ResponseProducts } from "../types";
 import { useDebounce } from "../hooks/usedebounce";
 import Pagination from "../_components/Pagination";
@@ -50,7 +50,7 @@ export function Products() {
     return (
       <div className="container mx-auto px-4 py-12 text-center">
         <p className="text-destructive">
-          Erro ao carregar produtos. Tente novamente.
+          Erro ao carregar cursos. Tente novamente.
         </p>
       </div>
     );
@@ -60,8 +60,8 @@ export function Products() {
     <div className="container mx-auto px-4 py-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-foreground mb-2">Produtos</h1>
-        <p className="text-secondary">Explore nossa seleção de produtos</p>
+        <h1 className="text-3xl font-bold text-foreground mb-2">Cursos</h1>
+        <p className="text-secondary">Explore nossa seleção de cursos</p>
       </div>
 
       {/* Filters Bar */}
@@ -73,7 +73,7 @@ export function Products() {
             type="text"
             value={searchTerm}
             onChange={handleSearchChange}
-            placeholder="Buscar produtos..."
+            placeholder="Buscar cursos..."
             className="w-full pl-10 pr-4 py-3 bg-transparent border border-muted rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
           />
         </div>
